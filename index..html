@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Instructor Safety Dashboard</title>
+<style>
+ body { font-family: Arial; margin: 20px; }
+ h2 { border-bottom: 2px solid #444; }
+ .card { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; }
+ .unsafe { color: #b00020; font-weight: bold; }
+ .safe { color: #006400; font-weight: bold; }
+ table { width: 100%; border-collapse: collapse; }
+ th, td { border: 1px solid #ccc; padding: 8px; }
+ th { background: #f4f4f4; }
+</style>
+</head>
+
+<body>
+
+<h1>Instructor Dashboard – Patient Safety Logic</h1>
+
+<div class="card">
+<h2>Item #42 – Instructor Analysis</h2>
+
+<h3>Clinical Scenario</h3>
+<p>
+Patient becomes short of breath while changing position in bed.
+</p>
+
+<h3 class="safe">Correct Action</h3>
+<p>
+<strong>Stop activity and assess breathing</strong>
+</p>
+
+<h3>Clinical Rationale (Medical Situation)</h3>
+<p>
+Shortness of breath during movement may indicate acute respiratory compromise,
+hypoxia, or cardiovascular instability. Immediate assessment is required to
+prevent deterioration. Continuing activity or delaying assessment increases risk
+of patient harm.
+</p>
+
+<h3>Distractor Analysis</h3>
+
+<table>
+<tr>
+<th>Option</th>
+<th>Candidate Thinking</th>
+<th class="unsafe">Unsafe Reason</th>
+<th>Prometric Signal</th>
+</tr>
+
+<tr>
+<td>Encourage deep breathing later</td>
+<td>“It will pass” / minimize symptom</td>
+<td class="unsafe">Ignore ABC</td>
+<td>Fails airway/breathing priority</td>
+</tr>
+
+<tr>
+<td>Document</td>
+<td>Task completion mindset</td>
+<td class="unsafe">Delay action</td>
+<td>Paperwork before patient safety</td>
+</tr>
+
+<tr>
+<td>Notify physician</td>
+<td>Authority dependency</td>
+<td class="unsafe">Wait for order</td>
+<td>Nurse did not act within scope</td>
+</tr>
+</table>
+
+<h3>Prometric Target (What is Being Tested)</h3>
+<ul>
+<li>Recognition of early respiratory compromise</li>
+<li>Immediate nurse-led intervention without delay</li>
+<li>ABC prioritization over hierarchy or documentation</li>
+</ul>
+
+<h3>Instructor Action Guidance</h3>
+<ul>
+<li>If missed → mark as <strong class="unsafe">Unsafe Reasoning</strong></li>
+<li>2+ similar misses → flag candidate for remediation</li>
+<li>Pattern across cohort → instructor calibration required</li>
+</ul>
+
+</div>
+
+</body>
+</html>
