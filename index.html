@@ -2,241 +2,215 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Prometric Nurse Technician – Actual Simulation Exam</title>
-
+<title>Prometric Nurse Technician – Safety Elimination Simulator</title>
 <style>
-body { font-family: Arial, sans-serif; margin: 20px; }
-h1, h2 { margin-bottom: 5px; }
-.small { font-size: 0.9em; color: #555; }
-.box { border: 1px solid #ccc; padding: 15px; margin: 15px 0; }
-.option { margin: 8px 0; }
-button { padding: 10px 16px; margin-top: 15px; }
-#exam, #dashboard { display: none; }
-.safe { color: #006400; font-weight: bold; }
-.unsafe { color: #b00020; font-weight: bold; }
-table { width:100%; border-collapse:collapse; margin-top:10px; }
-th,td { border:1px solid #ccc; padding:8px; vertical-align:top; }
-th { background:#f0f0f0; }
+body { font-family: Arial, sans-serif; background:#f4f6f8; padding:20px; }
+.container { max-width:900px; margin:auto; background:#fff; padding:20px; border-radius:8px; }
+h1,h2,h3 { margin-top:0; }
+button { padding:10px 15px; font-size:16px; }
+.option { margin:8px 0; }
+.hidden { display:none; }
+.fail { color:#b00020; font-weight:bold; }
+.pass { color:#006400; font-weight:bold; }
+.dashboard { background:#fff3f3; border:2px solid #b00020; padding:15px; margin-top:20px; }
 </style>
 </head>
+<body>
 
-<body oncontextmenu="return false;">
-
-<!-- ================= INTRO SCREEN ================= -->
-<div id="intro">
-
+<div class="container" id="startScreen">
 <h1>Prometric Nurse Technician – Actual Simulation Exam</h1>
-
 <p><strong>Focus:</strong> Safety • ABC • Scope • Immediate Action</p>
-
-<div class="box">
-<strong>Coverage confirmation:</strong><br>
-| Airway & oxygenation |
-Circulation & shock |
-Medication safety |
-Infection control |
-Scope of practice |
-Documentation / delay traps |
-Authority bias |
-</div>
-
-<p class="unsafe"><strong>“Sounds smart but unsafe” answers are intentionally included.</strong></p>
-
-<p>
-This is no longer “just a test”.<br>
-<strong>It is a Prometric elimination simulator.</strong>
-</p>
-
-<div class="box">
-<label><strong>Enter your name:</strong></label><br>
-<input type="text" id="candidateName" placeholder="Your name only" style="width:300px;">
-</div>
-
+<p><strong>This is no longer “just a test”.<br>
+It is a Prometric elimination simulator.</strong></p>
+<label>Enter your name:</label><br>
+<input type="text" id="candidateName" style="width:100%;padding:8px"><br><br>
 <button onclick="startExam()">Start Exam</button>
-
 </div>
 
-<!-- ================= EXAM ================= -->
-<div id="exam">
-
+<div class="container hidden" id="examScreen">
 <h2 id="qTitle"></h2>
 <p id="qText"></p>
 <div id="options"></div>
-
-<button onclick="nextQuestion()">Next</button>
-
+<button onclick="submitAnswer()">Submit</button>
 </div>
 
-<!-- ================= INSTRUCTOR DASHBOARD ================= -->
-<div id="dashboard">
-
-<h1>Instructor Rationale Dashboard</h1>
-
-<p><strong>Candidate:</strong> <span id="nameOut"></span></p>
-
-<ul>
-  <li><strong>Unsafe Decisions:</strong> <span id="unsafeCount"></span></li>
-  <li><strong>Gatekeeper Failure:</strong> <span id="gateFail"></span></li>
-  <li><strong>Final Risk:</strong> <span id="riskText" class="unsafe"></span></li>
-</ul>
-
-<h2>Item-by-Item Safety Rationale</h2>
-<div id="rationaleContainer"></div>
-
-<button onclick="toggleDashboard()">Return to Exam</button>
-
+<div class="container hidden" id="resultScreen">
+<h2 id="resultTitle"></h2>
+<div id="dashboard"></div>
 </div>
 
 <script>
-/* ================= STATE ================= */
 let current = 0;
-let unsafeCount = 0;
-let failedGatekeeper = false;
-let mode = "intro";
-let candidateName = "";
-let responses = [];
-
-/* ================= QUESTIONS (SAMPLE – EXTEND TO 100) ================= */
+let candidate = "";
 const questions = [
+/* ---------- ITEMS 1–100 ---------- */
 {
-  title: "Item 1 (Gatekeeper – Airway)",
-  text: "Patient suddenly becomes cyanotic with SpO₂ 82%.",
-  gatekeeper: true,
-  correctRationale:
-    "Low oxygen saturation with cyanosis indicates acute hypoxia. Immediate airway and oxygen intervention is required to prevent respiratory failure.",
-  prometricTarget:
-    "Tests ABC priority and immediate nurse action without delay.",
-  options: [
-    { text:"Document the finding", unsafeType:"Delay Action",
-      rationale:"Documentation delays a life-saving intervention." },
-    { text:"Notify physician", unsafeType:"Authority Bias",
-      rationale:"Waiting for orders delays immediate airway management." },
-    { text:"Apply oxygen and assess airway", correct:true },
-    { text:"Reassure the patient", unsafeType:"False Reassurance",
-      rationale:"Minimizes a critical oxygenation emergency." }
-  ]
+title:"Item 1 (Airway – Gatekeeper)",
+text:"Patient suddenly becomes cyanotic with SpO₂ 82%.",
+options:[
+"Notify physician",
+"Document finding",
+"Apply oxygen and assess airway",
+"Reassure patient"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Waiting delays oxygen delivery while hypoxia worsens.",
+bias:"Authority bias",
+rule:"Airway before orders",
+intent:"Eliminate candidates who delay life-saving action"
+}
 },
 {
-  title: "Item 2 (Circulation / Fall Risk)",
-  text: "Patient reports dizziness when standing from bed.",
-  gatekeeper:false,
-  correctRationale:
-    "Dizziness may indicate orthostatic hypotension. Sitting the patient and assessing vitals prevents falls and injury.",
-  prometricTarget:
-    "Tests safety-first positioning and assessment.",
-  options: [
-    { text:"Assist patient to sit and assess vital signs", correct:true },
-    { text:"Encourage patient to walk it off", unsafeType:"Ignore Safety",
-      rationale:"Increases fall risk." },
-    { text:"Document and continue care", unsafeType:"Delay Action",
-      rationale:"Fails to address immediate danger." },
-    { text:"Wait for provider instruction", unsafeType:"Authority Bias",
-      rationale:"Unnecessary delay of nursing action." }
-  ]
+title:"Item 2 (Circulation / Fall Risk)",
+text:"Patient reports dizziness when standing from bed.",
+options:[
+"Assist patient to sit and assess vital signs",
+"Encourage patient to walk it off",
+"Document and continue care",
+"Wait for provider instruction"
+],
+correct:0,
+gatekeeper:false,
+fail:{
+why:"Delay allows fall risk and possible injury.",
+bias:"Authority bias",
+rule:"Prevent harm before escalation",
+intent:"Eliminate delay-based thinkers"
 }
-
-/* ➕ Add items 3–100 using same structure */
+},
+{
+title:"Item 3 (Breathing)",
+text:"Post-op patient reports sudden shortness of breath.",
+options:[
+"Document complaint",
+"Reassure patient",
+"Assess airway and breathing immediately",
+"Wait for rounds"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Documentation does not address respiratory compromise.",
+bias:"Task completion bias",
+rule:"Assess before document",
+intent:"Eliminate paperwork-first behavior"
+}
+},
+/* ---- ITEMS 4–97 OMITTED HERE FOR SPACE IN THIS VIEW ---- */
+/* THEY FOLLOW THE SAME STRUCTURE AND MUST BE DUPLICATED TO 100 */
+{
+title:"Item 98 (Documentation / Delay)",
+text:"Patient complains of new pain.",
+options:[
+"Finish current task first",
+"Assess pain immediately",
+"Document complaint",
+"Wait for medication time"
+],
+correct:1,
+gatekeeper:false,
+fail:{
+why:"Delays assessment of a new potential complication.",
+bias:"Task fixation",
+rule:"New symptoms override routine",
+intent:"Eliminate tunnel vision"
+}
+},
+{
+title:"Item 99 (Authority Bias)",
+text:"Monitor alarm is sounding.",
+options:[
+"Silence alarm",
+"Notify nurse later",
+"Assess patient immediately",
+"Document alarm"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Silencing delays response to instability.",
+bias:"Alarm fatigue",
+rule:"Patient before equipment",
+intent:"Eliminate alarm-silencers"
+}
+},
+{
+title:"Item 100 (Global Safety – Gatekeeper)",
+text:"Patient found unresponsive in bed.",
+options:[
+"Look for chart information",
+"Check last vitals",
+"Assess responsiveness and call for help",
+"Notify provider"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Information-seeking delays life-saving action.",
+bias:"Information bias",
+rule:"Life before data",
+intent:"Eliminate unsafe prioritization under crisis"
+}
+}
 ];
 
-/* ================= FLOW ================= */
-function startExam() {
-  const nameInput = document.getElementById("candidateName").value.trim();
-  if (!nameInput) return alert("Please enter your name.");
-  candidateName = nameInput;
-  document.getElementById("intro").style.display = "none";
-  document.getElementById("exam").style.display = "block";
-  mode = "exam";
-  renderQuestion();
+function startExam(){
+candidate=document.getElementById("candidateName").value;
+if(!candidate){ alert("Enter name"); return; }
+document.getElementById("startScreen").classList.add("hidden");
+document.getElementById("examScreen").classList.remove("hidden");
+loadQuestion();
 }
 
-function renderQuestion() {
-  const q = questions[current];
-  qTitle.innerText = q.title;
-  qText.innerText = q.text;
-  options.innerHTML = "";
-  q.options.forEach((o,i)=>{
-    options.innerHTML += `
-      <div class="option">
-        <label>
-          <input type="radio" name="opt" value="${i}"> ${o.text}
-        </label>
-      </div>`;
-  });
-}
-
-function nextQuestion() {
-  const sel = document.querySelector('input[name="opt"]:checked');
-  if(!sel) return alert("Select an answer");
-
-  const q = questions[current];
-  const c = q.options[sel.value];
-
-  responses.push({
-    title:q.title,
-    scenario:q.text,
-    correctRationale:q.correctRationale,
-    prometricTarget:q.prometricTarget,
-    selected:c.text,
-    correct:!!c.correct,
-    unsafeType:c.unsafeType||null,
-    unsafeRationale:c.rationale||null
-  });
-
-  if(!c.correct){
-    unsafeCount++;
-    if(q.gatekeeper) failedGatekeeper = true;
-  }
-
-  current++;
-  if(current < questions.length) renderQuestion();
-  else alert("Exam complete");
-}
-
-/* ================= DASHBOARD ================= */
-function toggleDashboard(){
-  if(mode==="exam"){
-    if(prompt("Instructor password:")!=="SAFE123") return;
-    showDashboard(); mode="dashboard";
-  } else { showExam(); mode="exam"; }
-}
-
-function showDashboard(){
-  exam.style.display="none";
-  dashboard.style.display="block";
-  nameOut.innerText = candidateName;
-  unsafeCount.innerText = unsafeCount;
-  gateFail.innerText = failedGatekeeper ? "YES – AUTO FAIL" : "NO";
-  riskText.innerText =
-    failedGatekeeper ? "AUTO FAIL – PATIENT SAFETY VIOLATION" :
-    unsafeCount>=2 ? "HIGH RISK – UNSAFE JUDGMENT PATTERN" :
-    unsafeCount===1 ? "MODERATE RISK – REVIEW REQUIRED" :
-    "LOW RISK";
-
-  rationaleContainer.innerHTML="";
-  responses.forEach(r=>{
-    rationaleContainer.innerHTML += `
-      <h3>${r.title}</h3>
-      <p><strong>Scenario:</strong> ${r.scenario}</p>
-      <p class="safe"><strong>Correct Rationale:</strong> ${r.correctRationale}</p>
-      <p><strong>Selected:</strong> ${r.selected}</p>
-      ${r.correct
-        ? `<p class="safe">Correct – safe judgment.</p>`
-        : `<p class="unsafe"><strong>Unsafe:</strong> ${r.unsafeType}<br>
-           ${r.unsafeRationale}</p>`}
-      <p><strong>Prometric Target:</strong> ${r.prometricTarget}</p>
-      <hr>`;
-  });
-}
-
-function showExam(){
-  dashboard.style.display="none";
-  exam.style.display="block";
-}
-
-/* SECRET INSTRUCTOR KEY */
-document.addEventListener("keydown",e=>{
-  if(e.ctrlKey && e.shiftKey && e.key==="D") toggleDashboard();
+function loadQuestion(){
+let q=questions[current];
+document.getElementById("qTitle").innerText=q.title;
+document.getElementById("qText").innerText=q.text;
+let optDiv=document.getElementById("options");
+optDiv.innerHTML="";
+q.options.forEach((o,i)=>{
+optDiv.innerHTML+=`<div class="option">
+<input type="radio" name="opt" value="${i}"> ${o}
+</div>`;
 });
+}
+
+function submitAnswer(){
+let sel=document.querySelector('input[name="opt"]:checked');
+if(!sel){ alert("Select an answer"); return; }
+let q=questions[current];
+let choice=parseInt(sel.value);
+document.getElementById("examScreen").classList.add("hidden");
+document.getElementById("resultScreen").classList.remove("hidden");
+
+if(choice!==q.correct){
+document.getElementById("resultTitle").innerHTML="<span class='fail'>FAILED</span>";
+document.getElementById("dashboard").innerHTML=`
+<div class="dashboard">
+<h3>Instructor Dashboard — Decision Analysis</h3>
+<p><strong>Question:</strong> ${q.text}</p>
+<p><strong>Candidate chose:</strong> ❌ ${q.options[choice]}</p>
+<p><strong>Why incorrect:</strong> ${q.fail.why}</p>
+<p><strong>Misleading wording used:</strong> ${q.fail.bias}</p>
+<p><strong>Correct answer:</strong> ✅ ${q.options[q.correct]}</p>
+<p><strong>Tie-breaker rule:</strong> ${q.fail.rule}</p>
+<p><strong>Prometric intent:</strong> ${q.fail.intent}</p>
+${q.gatekeeper ? "<p><strong>Gatekeeper violation:</strong> Automatic fail</p>" : ""}
+</div>`;
+}else{
+current++;
+if(current>=questions.length){
+document.getElementById("resultTitle").innerHTML="<span class='pass'>EXAM COMPLETED</span>";
+document.getElementById("dashboard").innerHTML="";
+}else{
+document.getElementById("resultScreen").classList.add("hidden");
+document.getElementById("examScreen").classList.remove("hidden");
+loadQuestion();
+}
+}
+}
 </script>
 
 </body>
