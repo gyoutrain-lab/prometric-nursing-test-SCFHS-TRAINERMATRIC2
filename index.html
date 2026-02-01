@@ -2,104 +2,153 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>All-in-One Patient Safety Exam</title>
+<title>Prometric Nurse Technician – Actual Simulation Exam</title>
 
 <style>
 body { font-family: Arial, sans-serif; margin: 20px; }
-h2 { border-bottom: 2px solid #333; margin-top: 30px; }
+h1, h2 { margin-bottom: 5px; }
+.small { font-size: 0.9em; color: #555; }
+.box { border: 1px solid #ccc; padding: 15px; margin: 15px 0; }
 .option { margin: 8px 0; }
-button { padding: 8px 14px; margin-top: 15px; }
-#dashboard { display:none; border-top:4px solid #000; margin-top:40px; padding-top:20px; }
-table { width:100%; border-collapse:collapse; }
+button { padding: 10px 16px; margin-top: 15px; }
+#exam, #dashboard { display: none; }
+.safe { color: #006400; font-weight: bold; }
+.unsafe { color: #b00020; font-weight: bold; }
+table { width:100%; border-collapse:collapse; margin-top:10px; }
 th,td { border:1px solid #ccc; padding:8px; vertical-align:top; }
 th { background:#f0f0f0; }
-.safe { color:#006400; font-weight:bold; }
-.unsafe { color:#b00020; font-weight:bold; }
-.small { font-size:0.9em; color:#555; }
 </style>
 </head>
 
 <body oncontextmenu="return false;">
 
-<h1>Patient Safety Assessment</h1>
+<!-- ================= INTRO SCREEN ================= -->
+<div id="intro">
+
+<h1>Prometric Nurse Technician – Actual Simulation Exam</h1>
+
+<p><strong>Focus:</strong> Safety • ABC • Scope • Immediate Action</p>
+
+<div class="box">
+<strong>Coverage confirmation:</strong><br>
+| Airway & oxygenation |
+Circulation & shock |
+Medication safety |
+Infection control |
+Scope of practice |
+Documentation / delay traps |
+Authority bias |
+</div>
+
+<p class="unsafe"><strong>“Sounds smart but unsafe” answers are intentionally included.</strong></p>
+
+<p>
+This is no longer “just a test”.<br>
+<strong>It is a Prometric elimination simulator.</strong>
+</p>
+
+<div class="box">
+<label><strong>Enter your name:</strong></label><br>
+<input type="text" id="candidateName" placeholder="Your name only" style="width:300px;">
+</div>
+
+<button onclick="startExam()">Start Exam</button>
+
+</div>
 
 <!-- ================= EXAM ================= -->
 <div id="exam">
-  <h2 id="qTitle"></h2>
-  <p id="qText"></p>
-  <div id="options"></div>
-  <button onclick="nextQuestion()">Next</button>
+
+<h2 id="qTitle"></h2>
+<p id="qText"></p>
+<div id="options"></div>
+
+<button onclick="nextQuestion()">Next</button>
+
 </div>
 
-<!-- ============ INSTRUCTOR RATIONALE DASHBOARD ============ -->
+<!-- ================= INSTRUCTOR DASHBOARD ================= -->
 <div id="dashboard">
 
 <h1>Instructor Rationale Dashboard</h1>
 
-<h2>Safety Outcome</h2>
+<p><strong>Candidate:</strong> <span id="nameOut"></span></p>
+
 <ul>
   <li><strong>Unsafe Decisions:</strong> <span id="unsafeCount"></span></li>
   <li><strong>Gatekeeper Failure:</strong> <span id="gateFail"></span></li>
   <li><strong>Final Risk:</strong> <span id="riskText" class="unsafe"></span></li>
 </ul>
 
-<h2>Item-by-Item Medical Rationale</h2>
+<h2>Item-by-Item Safety Rationale</h2>
 <div id="rationaleContainer"></div>
 
 <button onclick="toggleDashboard()">Return to Exam</button>
+
 </div>
 
 <script>
-/* ============== STATE ============== */
+/* ================= STATE ================= */
 let current = 0;
 let unsafeCount = 0;
 let failedGatekeeper = false;
-let mode = "exam";
+let mode = "intro";
+let candidateName = "";
 let responses = [];
 
-/* ============== QUESTIONS (1–100 READY) ============== */
+/* ================= QUESTIONS (SAMPLE – EXTEND TO 100) ================= */
 const questions = [
 {
-  title: "Item 1 (Gatekeeper)",
-  text: "Patient suddenly becomes short of breath while ambulating.",
+  title: "Item 1 (Gatekeeper – Airway)",
+  text: "Patient suddenly becomes cyanotic with SpO₂ 82%.",
   gatekeeper: true,
   correctRationale:
-    "Sudden dyspnea during activity may indicate hypoxia or acute cardiopulmonary compromise. The nurse must stop the activity and assess airway and breathing immediately to prevent deterioration.",
+    "Low oxygen saturation with cyanosis indicates acute hypoxia. Immediate airway and oxygen intervention is required to prevent respiratory failure.",
   prometricTarget:
-    "Tests ABC prioritization and immediate nurse-led intervention without delay.",
+    "Tests ABC priority and immediate nurse action without delay.",
   options: [
     { text:"Document the finding", unsafeType:"Delay Action",
-      rationale:"Documentation does not address immediate respiratory risk." },
-    { text:"Notify physician", unsafeType:"Wait for Order",
-      rationale:"Delays a time-critical action within nursing scope." },
-    { text:"Stop activity and assess breathing", correct:true },
+      rationale:"Documentation delays a life-saving intervention." },
+    { text:"Notify physician", unsafeType:"Authority Bias",
+      rationale:"Waiting for orders delays immediate airway management." },
+    { text:"Apply oxygen and assess airway", correct:true },
     { text:"Reassure the patient", unsafeType:"False Reassurance",
-      rationale:"Minimizes a potentially life-threatening symptom." }
+      rationale:"Minimizes a critical oxygenation emergency." }
   ]
 },
 {
-  title: "Item 2",
+  title: "Item 2 (Circulation / Fall Risk)",
   text: "Patient reports dizziness when standing from bed.",
   gatekeeper:false,
   correctRationale:
-    "Dizziness on standing suggests orthostatic hypotension. Sitting the patient and assessing vitals prevents falls and injury.",
+    "Dizziness may indicate orthostatic hypotension. Sitting the patient and assessing vitals prevents falls and injury.",
   prometricTarget:
-    "Tests safety positioning and assessment before continuation of care.",
+    "Tests safety-first positioning and assessment.",
   options: [
     { text:"Assist patient to sit and assess vital signs", correct:true },
     { text:"Encourage patient to walk it off", unsafeType:"Ignore Safety",
-      rationale:"Increases fall risk without assessment." },
+      rationale:"Increases fall risk." },
     { text:"Document and continue care", unsafeType:"Delay Action",
-      rationale:"Fails to address immediate safety concern." },
-    { text:"Wait for provider instruction", unsafeType:"Wait for Order",
-      rationale:"Unnecessary escalation delays prevention." }
+      rationale:"Fails to address immediate danger." },
+    { text:"Wait for provider instruction", unsafeType:"Authority Bias",
+      rationale:"Unnecessary delay of nursing action." }
   ]
 }
 
-/* ➕ ADD ITEMS 3–100 HERE — SAME STRUCTURE */
+/* ➕ Add items 3–100 using same structure */
 ];
 
-/* ============== RENDER ============== */
+/* ================= FLOW ================= */
+function startExam() {
+  const nameInput = document.getElementById("candidateName").value.trim();
+  if (!nameInput) return alert("Please enter your name.");
+  candidateName = nameInput;
+  document.getElementById("intro").style.display = "none";
+  document.getElementById("exam").style.display = "block";
+  mode = "exam";
+  renderQuestion();
+}
+
 function renderQuestion() {
   const q = questions[current];
   qTitle.innerText = q.title;
@@ -118,6 +167,7 @@ function renderQuestion() {
 function nextQuestion() {
   const sel = document.querySelector('input[name="opt"]:checked');
   if(!sel) return alert("Select an answer");
+
   const q = questions[current];
   const c = q.options[sel.value];
 
@@ -142,7 +192,7 @@ function nextQuestion() {
   else alert("Exam complete");
 }
 
-/* ============== DASHBOARD ============== */
+/* ================= DASHBOARD ================= */
 function toggleDashboard(){
   if(mode==="exam"){
     if(prompt("Instructor password:")!=="SAFE123") return;
@@ -153,7 +203,8 @@ function toggleDashboard(){
 function showDashboard(){
   exam.style.display="none";
   dashboard.style.display="block";
-  unsafeCountSpan.innerText = unsafeCount;
+  nameOut.innerText = candidateName;
+  unsafeCount.innerText = unsafeCount;
   gateFail.innerText = failedGatekeeper ? "YES – AUTO FAIL" : "NO";
   riskText.innerText =
     failedGatekeeper ? "AUTO FAIL – PATIENT SAFETY VIOLATION" :
@@ -166,12 +217,12 @@ function showDashboard(){
     rationaleContainer.innerHTML += `
       <h3>${r.title}</h3>
       <p><strong>Scenario:</strong> ${r.scenario}</p>
-      <p class="safe"><strong>Correct Medical Rationale:</strong> ${r.correctRationale}</p>
+      <p class="safe"><strong>Correct Rationale:</strong> ${r.correctRationale}</p>
       <p><strong>Selected:</strong> ${r.selected}</p>
       ${r.correct
-        ? `<p class="safe">Correct – safe reasoning.</p>`
+        ? `<p class="safe">Correct – safe judgment.</p>`
         : `<p class="unsafe"><strong>Unsafe:</strong> ${r.unsafeType}<br>
-           <span class="small">${r.unsafeRationale}</span></p>`}
+           ${r.unsafeRationale}</p>`}
       <p><strong>Prometric Target:</strong> ${r.prometricTarget}</p>
       <hr>`;
   });
@@ -182,13 +233,10 @@ function showExam(){
   exam.style.display="block";
 }
 
-/* SECRET KEY */
+/* SECRET INSTRUCTOR KEY */
 document.addEventListener("keydown",e=>{
   if(e.ctrlKey && e.shiftKey && e.key==="D") toggleDashboard();
 });
-
-/* INIT */
-renderQuestion();
 </script>
 
 </body>
