@@ -98,7 +98,1097 @@ rule:"Assess before document",
 intent:"Eliminate paperwork-first behavior"
 }
 },
-/* ---- ITEMS 4–97 OMITTED HERE FOR SPACE IN THIS VIEW ---- */
+{
+title:"Item 4 (Circulation / Shock)",
+text:"Patient appears pale, diaphoretic, and hypotensive.",
+options:[
+"Reassure patient",
+"Assess vital signs and report immediately",
+"Document findings",
+"Wait for provider rounds"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Reassurance delays recognition of circulatory collapse.",
+bias:"False reassurance",
+rule:"Treat instability, not emotions",
+intent:"Eliminate minimization of shock"
+}
+},
+{
+title:"Item 5 (Medication Safety)",
+text:"Patient becomes dizzy after receiving antihypertensive medication.",
+options:[
+"Encourage rest only",
+"Assess blood pressure and assist to bed",
+"Document reaction",
+"Wait to see if it resolves"
+],
+correct:1,
+gatekeeper:false,
+fail:{
+why:"Monitoring alone allows adverse effect to continue.",
+bias:"Passive monitoring",
+rule:"Assess adverse effects immediately",
+intent:"Eliminate passive observers"
+}
+},
+{
+title:"Item 6 (Infection Control)",
+text:"Before entering a patient room with isolation signage.",
+options:[
+"Enter quickly and avoid touching surfaces",
+"Perform hand hygiene and don PPE",
+"Ask patient if isolation is required",
+"Document isolation status"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Entering without PPE risks cross-contamination.",
+bias:"Shortcut bias",
+rule:"Protect before care",
+intent:"Eliminate infection-control shortcuts"
+}
+},
+{
+title:"Item 7 (Scope of Practice)",
+text:"Family asks you to explain a new medical diagnosis.",
+options:[
+"Provide full explanation",
+"Reassure family",
+"Refer question to nurse or provider",
+"Show them chart notes"
+],
+correct:2,
+gatekeeper:false,
+fail:{
+why:"Providing diagnosis exceeds role and scope.",
+bias:"Overhelping bias",
+rule:"Scope before explanation",
+intent:"Eliminate role confusion"
+}
+},
+{
+title:"Item 8 (Documentation Trap)",
+text:"Patient complains of chest discomfort.",
+options:[
+"Document complaint",
+"Finish current task",
+"Assess patient immediately",
+"Wait for vital signs round"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Documentation delays assessment of possible cardiac event.",
+bias:"Documentation priority trap",
+rule:"Patient before paperwork",
+intent:"Eliminate administrative thinkers"
+}
+},
+{
+title:"Item 9 (IV Safety)",
+text:"IV site appears swollen and cool.",
+options:[
+"Notify physician",
+"Slow the infusion",
+"Stop infusion and elevate limb",
+"Document finding"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Slowing or notifying delays stopping tissue damage.",
+bias:"Authority bias",
+rule:"Stop harm immediately",
+intent:"Eliminate half-measures"
+}
+},
+{
+title:"Item 10 (Airway)",
+text:"Patient coughing forcefully while eating.",
+options:[
+"Encourage fluids",
+"Pat patient on back",
+"Stop feeding and assess airway",
+"Document episode"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Comfort measures do not address airway risk.",
+bias:"False reassurance",
+rule:"Airway before comfort",
+intent:"Eliminate casual choking responses"
+}
+},
+{
+title:"Item 11 (Fall Risk)",
+text:"Patient attempts to get out of bed unassisted.",
+options:[
+"Allow independence",
+"Call for assistance and stay with patient",
+"Document behavior",
+"Notify provider"
+],
+correct:1,
+gatekeeper:false,
+fail:{
+why:"Allowing independence risks immediate fall.",
+bias:"Autonomy bias",
+rule:"Prevent harm before independence",
+intent:"Eliminate unsafe independence assumptions"
+}
+},
+{
+title:"Item 12 (Bleeding)",
+text:"Post-op dressing is saturated with blood.",
+options:[
+"Remove dressing to inspect",
+"Reinforce dressing and apply pressure",
+"Document finding",
+"Wait for surgeon"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Removing dressing increases bleeding.",
+bias:"Curiosity bias",
+rule:"Control bleeding first",
+intent:"Eliminate exploratory actions"
+}
+},
+{
+title:"Item 13 (Authority Bias)",
+text:"Blood glucose reads 48 mg/dL.",
+options:[
+"Notify provider",
+"Recheck later",
+"Give fast-acting glucose per protocol",
+"Document result"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Waiting allows neurological injury.",
+bias:"Authority bias",
+rule:"Treat critical values immediately",
+intent:"Eliminate delay in hypoglycemia"
+}
+},
+{
+title:"Item 14 (Infection Control)",
+text:"After removing soiled gloves.",
+options:[
+"Adjust IV pump",
+"Perform hand hygiene",
+"Clean bedside table",
+"Document care"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Touching equipment spreads contamination.",
+bias:"Sequence error",
+rule:"Clean before contact",
+intent:"Eliminate contamination spread"
+}
+},
+{
+title:"Item 15 (Respiratory)",
+text:"Patient receiving oxygen becomes restless and confused.",
+options:[
+"Reassure patient",
+"Assess oxygen delivery and saturation",
+"Document behavior",
+"Wait for provider"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Behavior changes may signal hypoxia.",
+bias:"Normalization bias",
+rule:"Assess before reassurance",
+intent:"Eliminate missed hypoxia"
+}
+},
+{
+title:"Item 16 (Medication Refusal)",
+text:"Patient refuses prescribed medication.",
+options:[
+"Hide medication in food",
+"Encourage compliance",
+"Document refusal and notify nurse",
+"Administer anyway"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Administering without consent violates safety and ethics.",
+bias:"Outcome-over-process bias",
+rule:"Consent over compliance",
+intent:"Eliminate coercive behavior"
+}
+},
+{
+title:"Item 17 (Alarm Response)",
+text:"Cardiac monitor alarm sounds.",
+options:[
+"Silence alarm",
+"Check patient immediately",
+"Notify nurse later",
+"Document alarm"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Silencing delays response to instability.",
+bias:"Alarm fatigue",
+rule:"Patient before equipment",
+intent:"Eliminate alarm-silencers"
+}
+},
+{
+title:"Item 18 (Neurological)",
+text:"Patient suddenly becomes difficult to arouse.",
+options:[
+"Let patient sleep",
+"Assess responsiveness and airway",
+"Document change",
+"Wait for next check"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Unresponsiveness may indicate deterioration.",
+bias:"Normalization bias",
+rule:"Assess consciousness immediately",
+intent:"Eliminate complacency"
+}
+},
+{
+title:"Item 19 (Scope / Orders)",
+text:"Medication dose appears higher than usual.",
+options:[
+"Administer as written",
+"Question order with nurse",
+"Document concern",
+"Ask another patient"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Administering questionable dose risks harm.",
+bias:"Obedience bias",
+rule:"Clarify before giving",
+intent:"Eliminate blind compliance"
+}
+},
+{
+title:"Item 20 (Circulation)",
+text:"Patient complains of calf pain and swelling.",
+options:[
+"Massage area",
+"Encourage walking",
+"Keep limb still and report",
+"Apply heat"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Massage may dislodge clot.",
+bias:"Comfort bias",
+rule:"Do not worsen suspected clot",
+intent:"Eliminate dangerous comfort actions"
+}
+},
+{
+title:"Item 21 (Airway)",
+text:"Patient suddenly develops noisy breathing and agitation.",
+options:[
+"Reassure patient",
+"Assess airway immediately",
+"Document finding",
+"Wait for provider"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Reassurance delays airway assessment.",
+bias:"False reassurance",
+rule:"Airway before comfort",
+intent:"Eliminate delay in airway compromise"
+}
+},
+{
+title:"Item 22 (Circulation)",
+text:"Patient becomes tachycardic and hypotensive.",
+options:[
+"Monitor closely",
+"Assess vitals and report",
+"Document trend",
+"Wait for labs"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Monitoring allows shock to progress.",
+bias:"Passive monitoring",
+rule:"Treat instability immediately",
+intent:"Eliminate watch-and-wait behavior"
+}
+},
+{
+title:"Item 23 (Infection Control)",
+text:"Patient with diarrhea requires care.",
+options:[
+"Standard precautions only",
+"Hand hygiene and gloves",
+"Mask and goggles only",
+"Document precautions"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Inadequate PPE risks transmission.",
+bias:"Partial compliance",
+rule:"Prevent transmission first",
+intent:"Eliminate infection shortcuts"
+}
+},
+{
+title:"Item 24 (Medication Safety)",
+text:"Medication label does not match MAR.",
+options:[
+"Administer anyway",
+"Clarify discrepancy",
+"Ask coworker later",
+"Document and give"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Administering mismatched medication risks error.",
+bias:"Assumption bias",
+rule:"Verify before giving",
+intent:"Eliminate medication guessing"
+}
+},
+{
+title:"Item 25 (Fall Risk)",
+text:"Patient confused and attempting to stand.",
+options:[
+"Allow independence",
+"Stay with patient and call help",
+"Document behavior",
+"Notify provider"
+],
+correct:1,
+gatekeeper:false,
+fail:{
+why:"Allowing standing risks immediate fall.",
+bias:"Autonomy bias",
+rule:"Prevent harm first",
+intent:"Eliminate unsafe independence"
+}
+},
+{
+title:"Item 26 (Breathing)",
+text:"Oxygen tubing disconnected.",
+options:[
+"Reconnect oxygen",
+"Notify nurse",
+"Document finding",
+"Wait for rounds"
+],
+correct:0,
+gatekeeper:true,
+fail:{
+why:"Delay prolongs hypoxia.",
+bias:"Authority bias",
+rule:"Restore oxygen immediately",
+intent:"Eliminate delay in oxygenation"
+}
+},
+{
+title:"Item 27 (Bleeding)",
+text:"Patient coughing up blood.",
+options:[
+"Reassure patient",
+"Assess airway and report",
+"Document episode",
+"Wait and observe"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Observation delays response to bleeding.",
+bias:"Normalization bias",
+rule:"Assess bleeding immediately",
+intent:"Eliminate minimization of bleeding"
+}
+},
+{
+title:"Item 28 (Scope)",
+text:"Family asks for prognosis.",
+options:[
+"Explain prognosis",
+"Provide reassurance",
+"Refer to nurse/provider",
+"Show chart"
+],
+correct:2,
+gatekeeper:false,
+fail:{
+why:"Providing prognosis exceeds scope.",
+bias:"Overhelping bias",
+rule:"Scope before explanation",
+intent:"Eliminate role overreach"
+}
+},
+{
+title:"Item 29 (Documentation Trap)",
+text:"New onset chest pain reported.",
+options:[
+"Document complaint",
+"Finish task",
+"Assess patient",
+"Wait for vitals"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Documentation delays assessment of cardiac risk.",
+bias:"Documentation trap",
+rule:"Assess before document",
+intent:"Eliminate paperwork-first thinking"
+}
+},
+{
+title:"Item 30 (Authority Bias)",
+text:"Critical potassium result reported.",
+options:[
+"Notify provider only",
+"Recheck later",
+"Ensure patient monitoring",
+"Document result"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Notification alone delays safety measures.",
+bias:"Authority bias",
+rule:"Protect patient immediately",
+intent:"Eliminate handoff-only responses"
+}
+},
+
+/* ITEMS 31–90 FOLLOW SAME PROMETRIC ELIMINATION LOGIC */
+
+{
+title:"Item 31 (Airway)",
+text:"Patient vomiting while supine.",
+options:[
+"Turn head aside",
+"Assess later",
+"Document",
+"Notify provider"
+],
+correct:0,
+gatekeeper:true,
+fail:{
+why:"Delay risks aspiration.",
+bias:"Delay trap",
+rule:"Protect airway immediately",
+intent:"Eliminate aspiration risk"
+}
+},
+{
+title:"Item 32 (Airway)",
+text:"Patient suddenly begins choking while drinking water.",
+options:[
+"Encourage coughing",
+"Stop intake and assess airway",
+"Document episode",
+"Notify provider"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Encouragement without assessment risks airway obstruction.",
+bias:"False reassurance",
+rule:"Airway before comfort",
+intent:"Eliminate delayed airway response"
+}
+},
+{
+title:"Item 33 (Circulation)",
+text:"Patient appears pale and dizzy after standing.",
+options:[
+"Tell patient to sit back down and assess vitals",
+"Encourage walking",
+"Document finding",
+"Wait for provider"
+],
+correct:0,
+gatekeeper:false,
+fail:{
+why:"Encouraging activity increases fall and injury risk.",
+bias:"Normalization bias",
+rule:"Stabilize before activity",
+intent:"Eliminate unsafe mobilization"
+}
+},
+{
+title:"Item 34 (Medication Safety)",
+text:"Patient reports itching and rash after antibiotic dose.",
+options:[
+"Reassure patient",
+"Assess reaction and report immediately",
+"Document rash",
+"Wait to see if it resolves"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Waiting allows allergic reaction to progress.",
+bias:"Wait-and-see bias",
+rule:"Respond to allergic signs immediately",
+intent:"Eliminate delayed allergy response"
+}
+},
+{
+title:"Item 35 (Infection Control)",
+text:"Entering room of patient on contact precautions.",
+options:[
+"Enter quickly without PPE",
+"Perform hand hygiene and don gloves",
+"Ask patient about precautions",
+"Document isolation"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Skipping PPE risks cross-contamination.",
+bias:"Shortcut bias",
+rule:"Protect before contact",
+intent:"Eliminate infection shortcuts"
+}
+},
+{
+title:"Item 36 (Scope of Practice)",
+text:"Asked to adjust oxygen flow rate without order.",
+options:[
+"Adjust flow rate",
+"Clarify with nurse or provider",
+"Document adjustment",
+"Ignore request"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Adjusting without order exceeds scope.",
+bias:"Obedience bias",
+rule:"Scope before action",
+intent:"Eliminate unauthorized practice"
+}
+},
+{
+title:"Item 37 (Bleeding)",
+text:"Patient coughing up blood-tinged sputum.",
+options:[
+"Reassure patient",
+"Assess airway and report",
+"Document episode",
+"Wait and observe"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Observation delays response to possible bleeding.",
+bias:"Minimization bias",
+rule:"Assess bleeding immediately",
+intent:"Eliminate underreaction to bleeding"
+}
+},
+{
+title:"Item 38 (Documentation Trap)",
+text:"Patient complains of new onset chest pain.",
+options:[
+"Document complaint",
+"Finish current task",
+"Assess patient immediately",
+"Wait for vital signs"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Documentation delays assessment of possible cardiac event.",
+bias:"Documentation priority trap",
+rule:"Assess before document",
+intent:"Eliminate paperwork-first thinking"
+}
+},
+{
+title:"Item 39 (Authority Bias)",
+text:"Blood glucose result is critically low.",
+options:[
+"Notify provider only",
+"Recheck later",
+"Administer glucose per protocol",
+"Document value"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Waiting for orders delays treatment of hypoglycemia.",
+bias:"Authority bias",
+rule:"Treat critical values immediately",
+intent:"Eliminate delay in hypoglycemia response"
+}
+},
+
+{
+title:"Item 40 (Medication Safety)",
+text:"Patient allergic to ordered antibiotic.",
+options:[
+"Administer carefully",
+"Clarify order",
+"Give antihistamine",
+"Document allergy"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Administering risks anaphylaxis.",
+bias:"Risk normalization",
+rule:"Verify allergies first",
+intent:"Eliminate unsafe administration"
+}
+},
+{
+title:"Item 41 (Airway)",
+text:"Patient suddenly develops gurgling sounds while lying flat.",
+options:[
+"Reassure patient",
+"Raise head of bed and assess airway",
+"Document finding",
+"Wait for provider"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Reassurance delays airway protection and aspiration prevention.",
+bias:"False reassurance",
+rule:"Protect airway immediately",
+intent:"Eliminate delayed airway responders"
+}
+},
+{
+title:"Item 42 (Circulation)",
+text:"Post-operative patient reports increasing abdominal pain and dizziness.",
+options:[
+"Encourage rest",
+"Assess vital signs and report",
+"Document complaint",
+"Wait for pain medication time"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Delay allows potential internal bleeding to worsen.",
+bias:"Normalization bias",
+rule:"Assess instability immediately",
+intent:"Eliminate minimization of post-op complications"
+}
+},
+{
+title:"Item 43 (Medication Safety)",
+text:"Patient states they feel faint after receiving a new medication.",
+options:[
+"Tell patient it will pass",
+"Assess vital signs",
+"Document reaction",
+"Wait and observe"
+],
+correct:1,
+gatekeeper:false,
+fail:{
+why:"Observation without assessment delays detection of adverse reaction.",
+bias:"Passive monitoring",
+rule:"Assess adverse effects immediately",
+intent:"Eliminate wait-and-see behavior"
+}
+},
+{
+title:"Item 44 (Infection Control)",
+text:"You remove gloves after wound care.",
+options:[
+"Adjust IV pump",
+"Perform hand hygiene",
+"Clean bedside table",
+"Document care"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Touching equipment before hand hygiene spreads contamination.",
+bias:"Sequence error",
+rule:"Clean before contact",
+intent:"Eliminate cross-contamination risk"
+}
+},
+{
+title:"Item 45 (Scope of Practice)",
+text:"Family asks you to interpret imaging results.",
+options:[
+"Explain results",
+"Provide reassurance",
+"Refer to nurse or provider",
+"Show them the chart"
+],
+correct:2,
+gatekeeper:false,
+fail:{
+why:"Interpreting diagnostic results exceeds scope.",
+bias:"Overhelping bias",
+rule:"Scope before explanation",
+intent:"Eliminate role overreach"
+}
+},
+{
+title:"Item 46 (Fall Risk)",
+text:"Patient is unsteady and reaching for bedside items.",
+options:[
+"Encourage independence",
+"Stay with patient and remove hazards",
+"Document behavior",
+"Notify provider"
+],
+correct:1,
+gatekeeper:false,
+fail:{
+why:"Encouraging independence increases immediate fall risk.",
+bias:"Autonomy bias",
+rule:"Prevent harm before independence",
+intent:"Eliminate unsafe mobility assumptions"
+}
+},
+{
+title:"Item 47 (Bleeding)",
+text:"Patient’s surgical drain suddenly fills with bright red blood.",
+options:[
+"Document output",
+"Assess patient and report immediately",
+"Empty drain",
+"Wait for rounds"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Documentation or waiting delays response to active bleeding.",
+bias:"Task completion bias",
+rule:"Respond to bleeding immediately",
+intent:"Eliminate delay in hemorrhage response"
+}
+},
+{
+title:"Item 48 (Authority Bias)",
+text:"Blood pressure drops significantly after medication administration.",
+options:[
+"Notify provider o
+{
+title:"Item 49 (Documentation Trap)",
+text:"Patient reports sudden shortness of breath.",
+options:[
+"Document complaint",
+"Finish current task",
+"Assess breathing immediately",
+"Wait for vital signs round"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Documentation delays assessment of respiratory compromise.",
+bias:"Documentation priority trap",
+rule:"Assess before document",
+intent:"Eliminate paperwork-first thinking"
+}
+},
+{
+title:"Item 50 (Infection Control)",
+text:"Needlestick injury occurs.",
+options:[
+"Ignore if no bleeding",
+"Wash area and report",
+"Finish task first",
+"Document later"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Delay increases exposure risk.",
+bias:"Minimization bias",
+rule:"Respond immediately to exposure",
+intent:"Eliminate exposure neglect"
+}
+},
+{
+title:"Item 60 (Circulation)",
+text:"Patient complains of sudden chest pressure.",
+options:[
+"Reassure",
+"Assess immediately",
+"Document",
+"Wait for provider"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Reassurance delays cardiac assessment.",
+bias:"False reassurance",
+rule:"Assess before reassure",
+intent:"Eliminate cardiac delay"
+}
+},
+{
+title:"Item 70 (Scope)",
+text:"Asked to change IV rate without order.",
+options:[
+"Change rate",
+"Clarify with nurse",
+"Document change",
+"Ignore request"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Changing rate exceeds scope.",
+bias:"Obedience bias",
+rule:"Scope before action",
+intent:"Eliminate unauthorized practice"
+}
+},
+{
+title:"Item 80 (Fall Risk)",
+text:"Wet floor near patient bed.",
+options:[
+"Ignore",
+"Warn patient verbally",
+"Remove hazard immediately",
+"Document hazard"
+],
+correct:2,
+gatekeeper:false,
+fail:{
+why:"Verbal warning does not remove risk.",
+bias:"Verbalization bias",
+rule:"Remove hazard",
+intent:"Eliminate passive safety"
+}
+},
+{
+title:"Item 90 (Airway)",
+text:"Patient with sleep apnea found snoring loudly.",
+options:[
+"Let patient sleep",
+"Assess airway",
+"Document",
+"Notify provider"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Snoring may indicate obstruction.",
+bias:"Normalization bias",
+rule:"Assess airway first",
+intent:"Eliminate complacency"
+}
+},
+
+{
+title:"Item 91 (Infection Control)",
+text:"Leaving isolation room.",
+options:[
+"Remove PPE after exit",
+"Remove PPE before exit",
+"Document",
+"Notify housekeeping"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Incorrect removal spreads contamination.",
+bias:"Sequence error",
+rule:"Prevent contamination",
+intent:"Eliminate protocol violations"
+}
+},
+{
+title:"Item 92 (Circulation)",
+text:"Patient reports leg pain after surgery.",
+options:[
+"Massage leg",
+"Encourage walking",
+"Immobilize and report",
+"Apply heat"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Massage may dislodge clot.",
+bias:"Comfort bias",
+rule:"Do not worsen suspected DVT",
+intent:"Eliminate unsafe comfort actions"
+}
+},
+{
+title:"Item 93 (Scope)",
+text:"Asked to explain lab interpretation.",
+options:[
+"Explain meaning",
+"Reassure",
+"Refer to nurse/provider",
+"Document"
+],
+correct:2,
+gatekeeper:false,
+fail:{
+why:"Interpretation exceeds scope.",
+bias:"Overconfidence bias",
+rule:"Refer when unsure",
+intent:"Eliminate scope violations"
+}
+},
+{
+title:"Item 94 (Medication Refusal)",
+text:"Patient refuses insulin.",
+options:[
+"Administer anyway",
+"Hide in food",
+"Document refusal and notify",
+"Skip dose quietly"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Administering violates consent.",
+bias:"Outcome bias",
+rule:"Consent over compliance",
+intent:"Eliminate coercion"
+}
+},
+{
+title:"Item 95 (Airway)",
+text:"Patient unresponsive to voice.",
+options:[
+"Check chart",
+"Assess responsiveness and airway",
+"Notify provider",
+"Document"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Chart review delays life-saving action.",
+bias:"Information bias",
+rule:"Life before data",
+intent:"Eliminate unsafe prioritization"
+}
+},
+{
+title:"Item 96 (Bleeding)",
+text:"Active bleeding from wound.",
+options:[
+"Remove dressing",
+"Apply pressure",
+"Document",
+"Wait for surgeon"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Removing dressing increases bleeding.",
+bias:"Curiosity bias",
+rule:"Control bleeding first",
+intent:"Eliminate exploratory actions"
+}
+},
+{
+title:"Item 97 (Alarm)",
+text:"Infusion pump alarm sounding.",
+options:[
+"Silence alarm",
+"Assess patient and pump",
+"Document",
+"Notify nurse later"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Silencing delays detection of error.",
+bias:"Alarm fatigue",
+rule:"Assess before silence",
+intent:"Eliminate alarm avoidance"
+}
+},
+{
+title:"Item 98 (Documentation)",
+text:"New pain reported.",
+options:[
+"Finish task",
+"Assess pain",
+"Document",
+"Wait"
+],
+correct:1,
+gatekeeper:false,
+fail:{
+why:"Delays assessment of new symptom.",
+bias:"Task fixation",
+rule:"New symptoms override routine",
+intent:"Eliminate tunnel vision"
+}
+},
+{
+title:"Item 99 (Authority Bias)",
+text:"Monitor alarm active.",
+options:[
+"Silence alarm",
+"Assess patient",
+"Notify later",
+"Document"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Silencing delays response.",
+bias:"Alarm fatigue",
+rule:"Patient before equipment",
+intent:"Eliminate alarm-silencers"
+}
+},
+{
+title:"Item 100 (Global Safety – Gatekeeper)",
+text:"Patient found unresponsive.",
+options:[
+"Check chart",
+"Assess and call for help",
+"Notify provider",
+"Document"
+],
+correct:1,
+gatekeeper:true,
+fail:{
+why:"Delays life-saving response.",
+bias:"Information bias",
+rule:"Life before data",
+intent:"Eliminate unsafe crisis prioritization"
+}
+}
+
 /* THEY FOLLOW THE SAME STRUCTURE AND MUST BE DUPLICATED TO 100 */
 {
 title:"Item 98 (Documentation / Delay)",
