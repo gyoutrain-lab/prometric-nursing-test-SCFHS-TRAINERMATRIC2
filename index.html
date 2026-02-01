@@ -2,19 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Patient Safety Exam</title>
+<title>All-in-One Patient Safety Exam</title>
 
 <style>
-  body { font-family: Arial, sans-serif; margin: 20px; }
-  h2 { border-bottom: 2px solid #444; }
-  .option { margin: 8px 0; }
-  button { padding: 8px 14px; margin-top: 15px; }
-  #dashboard { display: none; border-top: 3px solid #000; margin-top: 30px; padding-top: 20px; }
-  table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-  th, td { border: 1px solid #ccc; padding: 8px; }
-  th { background: #f4f4f4; }
-  .unsafe { color: #b00020; font-weight: bold; }
-  .safe { color: #006400; font-weight: bold; }
+body { font-family: Arial, sans-serif; margin: 20px; }
+h2 { border-bottom: 2px solid #333; margin-top: 30px; }
+.option { margin: 8px 0; }
+button { padding: 8px 14px; margin-top: 15px; }
+#dashboard { display:none; border-top:4px solid #000; margin-top:40px; padding-top:20px; }
+table { width:100%; border-collapse:collapse; }
+th,td { border:1px solid #ccc; padding:8px; vertical-align:top; }
+th { background:#f0f0f0; }
+.safe { color:#006400; font-weight:bold; }
+.unsafe { color:#b00020; font-weight:bold; }
+.small { font-size:0.9em; color:#555; }
 </style>
 </head>
 
@@ -22,216 +23,171 @@
 
 <h1>Patient Safety Assessment</h1>
 
-<!-- EXAM AREA -->
+<!-- ================= EXAM ================= -->
 <div id="exam">
-
-<h2 id="qTitle"></h2>
-<p id="qText"></p>
-
-<div id="options"></div>
-
-<button onclick="nextQuestion()">Next</button>
-
+  <h2 id="qTitle"></h2>
+  <p id="qText"></p>
+  <div id="options"></div>
+  <button onclick="nextQuestion()">Next</button>
 </div>
 
-<!-- INSTRUCTOR DASHBOARD -->
+<!-- ============ INSTRUCTOR RATIONALE DASHBOARD ============ -->
 <div id="dashboard">
 
-<h1>Instructor Dashboard</h1>
+<h1>Instructor Rationale Dashboard</h1>
 
-<h2>Safety Summary</h2>
+<h2>Safety Outcome</h2>
 <ul>
-  <li><strong>Total Unsafe Decisions:</strong> <span id="unsafeCount"></span></li>
+  <li><strong>Unsafe Decisions:</strong> <span id="unsafeCount"></span></li>
   <li><strong>Gatekeeper Failure:</strong> <span id="gateFail"></span></li>
+  <li><strong>Final Risk:</strong> <span id="riskText" class="unsafe"></span></li>
 </ul>
 
-<h2>Unsafe Reasoning Patterns</h2>
-<table>
-<tr>
-  <th>Pattern</th>
-  <th>Count</th>
-  <th>Prometric Meaning</th>
-</tr>
-<tr>
-  <td>Delay Action</td>
-  <td id="u_delay"></td>
-  <td>Did not act immediately</td>
-</tr>
-<tr>
-  <td>Ignore ABC</td>
-  <td id="u_abc"></td>
-  <td>Missed airway/breathing priority</td>
-</tr>
-<tr>
-  <td>Wait for Order</td>
-  <td id="u_wait"></td>
-  <td>Authority dependency</td>
-</tr>
-<tr>
-  <td>False Reassurance</td>
-  <td id="u_false"></td>
-  <td>Minimized patient risk</td>
-</tr>
-<tr>
-  <td>Out of Scope</td>
-  <td id="u_scope"></td>
-  <td>Unsafe nurse action</td>
-</tr>
-</table>
-
-<h2>Risk Interpretation</h2>
-<p id="riskText" class="unsafe"></p>
+<h2>Item-by-Item Medical Rationale</h2>
+<div id="rationaleContainer"></div>
 
 <button onclick="toggleDashboard()">Return to Exam</button>
-
 </div>
 
 <script>
-/* ===============================
-   CONFIG
-================================ */
-let mode = "exam";
+/* ============== STATE ============== */
 let current = 0;
 let unsafeCount = 0;
 let failedGatekeeper = false;
+let mode = "exam";
+let responses = [];
 
-let unsafeLog = {
-  delay_action: 0,
-  ignore_ABC: 0,
-  wait_for_order: 0,
-  false_reassurance: 0,
-  out_of_scope: 0
-};
-
-/* ===============================
-   QUESTIONS (SCALABLE TO 100)
-================================ */
+/* ============== QUESTIONS (1–100 READY) ============== */
 const questions = [
 {
   title: "Item 1 (Gatekeeper)",
-  text: "Patient suddenly becomes short of breath during ambulation.",
+  text: "Patient suddenly becomes short of breath while ambulating.",
   gatekeeper: true,
+  correctRationale:
+    "Sudden dyspnea during activity may indicate hypoxia or acute cardiopulmonary compromise. The nurse must stop the activity and assess airway and breathing immediately to prevent deterioration.",
+  prometricTarget:
+    "Tests ABC prioritization and immediate nurse-led intervention without delay.",
   options: [
-    { text: "Document the finding", unsafe: "delay_action" },
-    { text: "Notify physician", unsafe: "wait_for_order" },
-    { text: "Stop activity and assess breathing", correct: true },
-    { text: "Reassure the patient", unsafe: "false_reassurance" }
+    { text:"Document the finding", unsafeType:"Delay Action",
+      rationale:"Documentation does not address immediate respiratory risk." },
+    { text:"Notify physician", unsafeType:"Wait for Order",
+      rationale:"Delays a time-critical action within nursing scope." },
+    { text:"Stop activity and assess breathing", correct:true },
+    { text:"Reassure the patient", unsafeType:"False Reassurance",
+      rationale:"Minimizes a potentially life-threatening symptom." }
   ]
 },
 {
   title: "Item 2",
-  text: "Patient reports dizziness when standing.",
-  gatekeeper: false,
+  text: "Patient reports dizziness when standing from bed.",
+  gatekeeper:false,
+  correctRationale:
+    "Dizziness on standing suggests orthostatic hypotension. Sitting the patient and assessing vitals prevents falls and injury.",
+  prometricTarget:
+    "Tests safety positioning and assessment before continuation of care.",
   options: [
-    { text: "Assist patient to sit and assess vital signs", correct: true },
-    { text: "Encourage patient to walk it off", unsafe: "ignore_ABC" },
-    { text: "Document and continue care", unsafe: "delay_action" },
-    { text: "Wait for provider instruction", unsafe: "wait_for_order" }
+    { text:"Assist patient to sit and assess vital signs", correct:true },
+    { text:"Encourage patient to walk it off", unsafeType:"Ignore Safety",
+      rationale:"Increases fall risk without assessment." },
+    { text:"Document and continue care", unsafeType:"Delay Action",
+      rationale:"Fails to address immediate safety concern." },
+    { text:"Wait for provider instruction", unsafeType:"Wait for Order",
+      rationale:"Unnecessary escalation delays prevention." }
   ]
 }
 
-/* 👉 Add items 3–100 here using same structure */
+/* ➕ ADD ITEMS 3–100 HERE — SAME STRUCTURE */
 ];
 
-/* ===============================
-   RENDER
-================================ */
+/* ============== RENDER ============== */
 function renderQuestion() {
   const q = questions[current];
-  document.getElementById("qTitle").innerText = q.title;
-  document.getElementById("qText").innerText = q.text;
-
-  const optDiv = document.getElementById("options");
-  optDiv.innerHTML = "";
-
-  q.options.forEach((o, i) => {
-    const d = document.createElement("div");
-    d.className = "option";
-    d.innerHTML = `
-      <label>
-        <input type="radio" name="opt" value="${i}">
-        ${o.text}
-      </label>`;
-    optDiv.appendChild(d);
+  qTitle.innerText = q.title;
+  qText.innerText = q.text;
+  options.innerHTML = "";
+  q.options.forEach((o,i)=>{
+    options.innerHTML += `
+      <div class="option">
+        <label>
+          <input type="radio" name="opt" value="${i}"> ${o.text}
+        </label>
+      </div>`;
   });
 }
 
 function nextQuestion() {
-  const selected = document.querySelector('input[name="opt"]:checked');
-  if (!selected) return alert("Select an answer");
-
+  const sel = document.querySelector('input[name="opt"]:checked');
+  if(!sel) return alert("Select an answer");
   const q = questions[current];
-  const choice = q.options[selected.value];
+  const c = q.options[sel.value];
 
-  if (!choice.correct) {
+  responses.push({
+    title:q.title,
+    scenario:q.text,
+    correctRationale:q.correctRationale,
+    prometricTarget:q.prometricTarget,
+    selected:c.text,
+    correct:!!c.correct,
+    unsafeType:c.unsafeType||null,
+    unsafeRationale:c.rationale||null
+  });
+
+  if(!c.correct){
     unsafeCount++;
-    if (choice.unsafe) unsafeLog[choice.unsafe]++;
-    if (q.gatekeeper) failedGatekeeper = true;
+    if(q.gatekeeper) failedGatekeeper = true;
   }
 
   current++;
-
-  if (current < questions.length) {
-    renderQuestion();
-  } else {
-    alert("Exam complete");
-  }
+  if(current < questions.length) renderQuestion();
+  else alert("Exam complete");
 }
 
-/* ===============================
-   DASHBOARD TOGGLE
-================================ */
-function toggleDashboard() {
-  if (mode === "exam") {
-    const pwd = prompt("Instructor password:");
-    if (pwd !== "SAFE123") return;
-    showDashboard();
-    mode = "dashboard";
-  } else {
-    showExam();
-    mode = "exam";
-  }
+/* ============== DASHBOARD ============== */
+function toggleDashboard(){
+  if(mode==="exam"){
+    if(prompt("Instructor password:")!=="SAFE123") return;
+    showDashboard(); mode="dashboard";
+  } else { showExam(); mode="exam"; }
 }
 
-function showDashboard() {
-  document.getElementById("exam").style.display = "none";
-  document.getElementById("dashboard").style.display = "block";
+function showDashboard(){
+  exam.style.display="none";
+  dashboard.style.display="block";
+  unsafeCountSpan.innerText = unsafeCount;
+  gateFail.innerText = failedGatekeeper ? "YES – AUTO FAIL" : "NO";
+  riskText.innerText =
+    failedGatekeeper ? "AUTO FAIL – PATIENT SAFETY VIOLATION" :
+    unsafeCount>=2 ? "HIGH RISK – UNSAFE JUDGMENT PATTERN" :
+    unsafeCount===1 ? "MODERATE RISK – REVIEW REQUIRED" :
+    "LOW RISK";
 
-  document.getElementById("unsafeCount").innerText = unsafeCount;
-  document.getElementById("gateFail").innerText =
-    failedGatekeeper ? "YES (AUTO FAIL)" : "NO";
-
-  document.getElementById("u_delay").innerText = unsafeLog.delay_action;
-  document.getElementById("u_abc").innerText = unsafeLog.ignore_ABC;
-  document.getElementById("u_wait").innerText = unsafeLog.wait_for_order;
-  document.getElementById("u_false").innerText = unsafeLog.false_reassurance;
-  document.getElementById("u_scope").innerText = unsafeLog.out_of_scope;
-
-  let risk = "LOW RISK";
-  if (failedGatekeeper) risk = "AUTO FAIL – PATIENT SAFETY VIOLATION";
-  else if (unsafeCount >= 2) risk = "HIGH RISK – UNSAFE JUDGMENT PATTERN";
-  else if (unsafeCount === 1) risk = "MODERATE RISK – REVIEW REQUIRED";
-
-  document.getElementById("riskText").innerText = risk;
+  rationaleContainer.innerHTML="";
+  responses.forEach(r=>{
+    rationaleContainer.innerHTML += `
+      <h3>${r.title}</h3>
+      <p><strong>Scenario:</strong> ${r.scenario}</p>
+      <p class="safe"><strong>Correct Medical Rationale:</strong> ${r.correctRationale}</p>
+      <p><strong>Selected:</strong> ${r.selected}</p>
+      ${r.correct
+        ? `<p class="safe">Correct – safe reasoning.</p>`
+        : `<p class="unsafe"><strong>Unsafe:</strong> ${r.unsafeType}<br>
+           <span class="small">${r.unsafeRationale}</span></p>`}
+      <p><strong>Prometric Target:</strong> ${r.prometricTarget}</p>
+      <hr>`;
+  });
 }
 
-function showExam() {
-  document.getElementById("dashboard").style.display = "none";
-  document.getElementById("exam").style.display = "block";
+function showExam(){
+  dashboard.style.display="none";
+  exam.style.display="block";
 }
 
-/* ===============================
-   SECRET KEY TO OPEN DASHBOARD
-================================ */
-document.addEventListener("keydown", function(e) {
-  if (e.ctrlKey && e.shiftKey && e.key === "D") {
-    toggleDashboard();
-  }
+/* SECRET KEY */
+document.addEventListener("keydown",e=>{
+  if(e.ctrlKey && e.shiftKey && e.key==="D") toggleDashboard();
 });
 
-/* ===============================
-   INIT
-================================ */
+/* INIT */
 renderQuestion();
 </script>
 
