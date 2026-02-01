@@ -897,7 +897,20 @@ intent:"Eliminate delay in hemorrhage response"
 title:"Item 48 (Authority Bias)",
 text:"Blood pressure drops significantly after medication administration.",
 options:[
-"Notify provider o
+"Notify provider only",
+"Reassure patient",
+"Assess patient and place supine",
+"Document change"
+],
+correct:2,
+gatekeeper:true,
+fail:{
+why:"Reassurance or notification alone delays stabilization.",
+bias:"Authority bias",
+rule:"Stabilize before escalate",
+intent:"Eliminate handoff-only thinkers"
+}
+},
 {
 title:"Item 49 (Documentation Trap)",
 text:"Patient reports sudden shortness of breath.",
